@@ -35,11 +35,10 @@ public class MainFrame extends JFrame {
         setTitle("UPSC Wars");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setSize((int) screenSize.getWidth(), (int) screenSize.getHeight());
-        setLayout(new GridLayout(1, 1));
+        setLayout(new FlowLayout());
 
         JPanel panelContainingTwoPanelsOneContainingTwoPanelsContainingEnglishAndHindiQuestionAndOtherPanelContainingButtons = new JPanel();
-        panelContainingTwoPanelsOneContainingTwoPanelsContainingEnglishAndHindiQuestionAndOtherPanelContainingButtons.setBorder(new TitledBorder("UPSC Wars"));
-        panelContainingTwoPanelsOneContainingTwoPanelsContainingEnglishAndHindiQuestionAndOtherPanelContainingButtons.setLayout(new BoxLayout(panelContainingTwoPanelsOneContainingTwoPanelsContainingEnglishAndHindiQuestionAndOtherPanelContainingButtons, BoxLayout.Y_AXIS));
+        panelContainingTwoPanelsOneContainingTwoPanelsContainingEnglishAndHindiQuestionAndOtherPanelContainingButtons.setLayout(new BoxLayout(panelContainingTwoPanelsOneContainingTwoPanelsContainingEnglishAndHindiQuestionAndOtherPanelContainingButtons, BoxLayout.X_AXIS));
 
 
         JPanel englishQuestionPanel = new JPanel();
@@ -75,7 +74,7 @@ public class MainFrame extends JFrame {
 
         JPanel panelContainingEnglishAndHindiQuestions = new JPanel();
         panelContainingEnglishAndHindiQuestions.setLayout(new BoxLayout(panelContainingEnglishAndHindiQuestions, BoxLayout.X_AXIS));
-
+        panelContainingEnglishAndHindiQuestions.add(buttonsPanel);
 
         panelContainingEnglishAndHindiQuestions.add(englishQuestionPanel);
         panelContainingEnglishAndHindiQuestions.add(hindiPanel);
@@ -119,6 +118,7 @@ public class MainFrame extends JFrame {
         panelContainingListOfTagsAndListOfSubjects.add(buttonsPanel);
 
         panelContainingTwoPanelsOneContainingTwoPanelsContainingEnglishAndHindiQuestionAndOtherPanelContainingButtons.add(panelContainingEnglishAndHindiQuestions);
+        panelContainingTwoPanelsOneContainingTwoPanelsContainingEnglishAndHindiQuestionAndOtherPanelContainingButtons.add(panelContainingListOfTagsAndListOfSubjects);
         panelContainingEnglishAndHindiQuestions.add(hindiQuestionPanel);
 
         add(panelContainingTwoPanelsOneContainingTwoPanelsContainingEnglishAndHindiQuestionAndOtherPanelContainingButtons);
@@ -170,6 +170,6 @@ public class MainFrame extends JFrame {
         }
 
         FirebaseApp.initializeApp(options);
-        new MainFrameForEnglishQuestionEdit();
+        new MainFrame();
     }
 }

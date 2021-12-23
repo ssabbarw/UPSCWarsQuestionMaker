@@ -18,6 +18,8 @@ public class MainFrameForEnglishQuestionEdit extends JFrame {
     private JTextArea englishHintText = new JTextArea();
     private TextField englishTagsText = new TextField();
 
+    private JTextField qnoText = new JTextField();
+
     private JButton nextButton = new JButton("Next");
     private JButton prevButton = new JButton("Prev");
     private JButton loadButton = new JButton("Load");
@@ -31,7 +33,7 @@ public class MainFrameForEnglishQuestionEdit extends JFrame {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setSize((int) screenSize.getWidth(), (int) screenSize.getHeight());
         setLayout(new GridLayout(1, 1));
-
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JPanel englishQuestionPanel = new JPanel();
         add(englishQuestionPanel);
@@ -41,6 +43,8 @@ public class MainFrameForEnglishQuestionEdit extends JFrame {
 
         englishQuestionPanel.add(englishStatementText);
         englishQuestionPanel.add(new JToolBar.Separator());
+        englishStatementText.setLineWrap(true);
+        englishStatementText.setWrapStyleWord(true);
         englishHintText.setLineWrap(true);
         englishQuestionPanel.add(englishHintText);
         englishQuestionPanel.add(new JToolBar.Separator());
@@ -48,8 +52,8 @@ public class MainFrameForEnglishQuestionEdit extends JFrame {
 
 
         JPanel panelContainingQnoAndText = new JPanel();
-        panelContainingQnoAndText.setLayout(new FlowLayout());
-        panelContainingQnoAndText.add(new JTextField("2000"));
+        panelContainingQnoAndText.setLayout(new GridLayout(1, 2));
+        panelContainingQnoAndText.add(qnoText);
         panelContainingQnoAndText.add(new JLabel("Qno"));
 
         buttonsPanel.add(panelContainingQnoAndText);
@@ -63,26 +67,39 @@ public class MainFrameForEnglishQuestionEdit extends JFrame {
         setVisible(true);
         englishQuestionPanel.add(buttonsPanel);
 
-
         loadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                firestore = FirestoreClient.getFirestore();
-                try {
-                    DocumentSnapshot documentSnapshot = firestore.collection(allQueTableKey).document("Q0").get().get();
-                    Map<String, Object> dataMap = documentSnapshot.getData();
-                    englishStatementText.setText(dataMap.get(stmtFieldKey).toString());
-                    englishHintText.setText(dataMap.get(hintFieldKey).toString());
-                    englishTagsText.setText(dataMap.get(tagsFieldKey).toString());
-
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                } catch (ExecutionException ex) {
-                    ex.printStackTrace();
-                }
+                loadQuestion(loadButton);
             }
         });
 
+    }
+
+    private void loadQuestion(Component c) {
+        try {
+            String qnoStr = qnoText.getText();
+            if (qnoStr == null || qnoStr.isEmpty() || qnoStr.isBlank()) {
+                JOptionPane.showMessageDialog(c, "Please enter valid Question Number.");
+                return;
+            }
+            firestore = FirestoreClient.getFirestore();
+            int qno = Integer.parseInt(qnoStr);
+            DocumentSnapshot documentSnapshot = firestore.collection(allQueTableKey).document("Q" + qno).get().get();
+            if (!documentSnapshot.exists()) {
+                JOptionPane.showMessageDialog(loadButton, "Question not found");
+                return;
+            }
+            Map<String, Object> dataMap = documentSnapshot.getData();
+            englishStatementText.setText(dataMap.get(stmtFieldKey).toString());
+            englishHintText.setText(dataMap.get(hintFieldKey).toString());
+            englishTagsText.setText(dataMap.get(tagsFieldKey).toString());
+
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        } catch (ExecutionException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private Firestore firestore;
