@@ -1,7 +1,8 @@
+import java.util.HashMap;
 import java.util.Map;
 
 public class Question {
-    int questionNumber;
+    int Qno;
     String subject;
     String tags;
     String statement;
@@ -20,7 +21,7 @@ public class Question {
     static final String kQUESTION_USER_RESPONSE_FIELD = "userResponse";
 
     public Question(int questionNumber, String subject, String tags, String statement, String hint, int correctOptionNumber, boolean bookmarked, int userResponse) {
-        this.questionNumber = questionNumber;
+        this.Qno = questionNumber;
         this.subject = subject;
         this.tags = tags;
         this.statement = statement;
@@ -30,12 +31,12 @@ public class Question {
         this.userResponse = userResponse;
     }
 
-    public int getQuestionNumber() {
-        return questionNumber;
+    public int getQno() {
+        return Qno;
     }
 
-    public void setQuestionNumber(int questionNumber) {
-        this.questionNumber = questionNumber;
+    public void setQno(int questionNumber) {
+        this.Qno = questionNumber;
     }
 
     public String getSubject() {
@@ -107,10 +108,24 @@ public class Question {
         );
     }
 
+    public Map<String, Object> toDataMap() {
+        Map<String, Object> dataMap = new HashMap<>();
+        dataMap.put(kQuestionNumber_Field, this.Qno);
+        dataMap.put(kQuestion_Subject_Field, this.subject);
+        dataMap.put(kQuestion_bookmarked_Field, this.bookmarked);
+        dataMap.put(kQuestion_Statement_Field, this.statement);
+        dataMap.put(kQuestion_hint_Field, this.hint);
+        dataMap.put(kQuestion_correct_option_Field, this.correctOptionNumber);
+        dataMap.put(kQUESTION_USER_RESPONSE_FIELD, this.userResponse);
+        dataMap.put(kQuestion_tags_Field, this.tags);
+        return dataMap;
+
+    }
+
     @Override
     public String toString() {
         return "Question{" +
-                "questionNumber=" + questionNumber +
+                "questionNumber=" + Qno +
                 ", subject='" + subject + '\'' +
                 ", tags='" + tags + '\'' +
                 ", statement='" + statement + '\'' +
